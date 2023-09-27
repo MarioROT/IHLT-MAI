@@ -31,8 +31,8 @@ class TextPreprocessing():
                 self.tokenized_data.append(nltk.word_tokenize(sentence))
             elif method == 'spacy':
                 doc = nlp(sentence)
-                self.tokenized_data.append([[token.text for token in sent] for sent in doc.sents])
-            elif methos == 'textserver':
+                self.tokenized_data.append([[token.text for token in sent] for sent in doc.sents][0])
+            elif method == 'textserver':
                 self.tokenized_data.append(ts.tokenizer(sentence))
         return self.tokenized_data
 
