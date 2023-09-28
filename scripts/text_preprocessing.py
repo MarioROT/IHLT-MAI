@@ -55,7 +55,7 @@ class TextPreprocessing():
                     sentence = nltk.word_tokenize(sentence)
                 tagged_pairs = nltk.pos_tag(sentence)
                 lemmatization = lambda pair:wnl.lemmatize(pair[0], pos=self.tag_conversor[pair[1]]) if pair[1] in self.tag_conversor else pair[0]
-                self.lemmatized_data.append([lemmatization(pair) for pair in pairs])
+                self.lemmatized_data.append([lemmatization(pair) for pair in tagged_pairs])
             elif method == 'spacy':
                 doc = nlp(sentence)
                 self.lemmatized_data.append([token.lemma_ for token in doc])
