@@ -47,25 +47,60 @@ class TextPreprocessing():
                 self.tokenized_data.append(ts.tokenizer(sentence))
         return self.tokenized_data
 
-    def lemmatize_data(self, data=False, method='nltk'):
+    def lemmatize_data(self, data=False, method='nltk', verbose = True):
         ts = TextServer('user', 'passwd', 'tokenizer')
         self.lemmatized_data = []
         t_data = self.data if not data else data
         for sentence in t_data:
             if method == 'nltk':
                 if not isinstance(sentence, list):
-                    print('Applying NLTK tokenization to the sentence')
+                    if verbose:
+                        print('Applying NLTK tokenization to the sentence')
                     sentence = nltk.word_tokenize(sentence)
                 tagged_pairs = nltk.pos_tag(sentence)
                 lemmatization = lambda pair:wnl.lemmatize(pair[0], pos=self.tag_conversor[pair[1]]) if pair[1] in self.tag_conversor else pair[0]
                 self.lemmatized_data.append([lemmatization(pair) for pair in tagged_pairs])
             elif method == 'spacy':
                 doc = nlp(sentence)
-                self.lemmatized_data.append([token.lemma_ for token in doc])
+                self.lemmatized_data.append(token.lemma_ for token in doc)
             elif method == 'textserver':
                 ts = TextServer('usuari', 'passwd', 'morpho')
                 self.lemmatized_data([token[1] for token in ts.morpho(sentence)[0]])
         return self.lemmatized_data
+
+    def clean_data(self, data = False, auto = True, lowercase = False, stopwords = False, minwords_len = False, signs = False):
+        self.cleaned_data = []
+        t_data = self.data if not data else data
+        if auto:
+            lowercase = True
+            stopwords=set(nltk.corpus.stopwords.words('english'))
+            signs = string.punctuation
+            minwords_len = 2
+            for element in c_data:
+                self.cleaned_data.append(self.clean_sentence(element, lowercase, stopwords, minwords_len, signs))
+        else: 
+            for element in c_data:
+                 self.cleaned_data.append(self.clean_sentence(element, lowercase, stopwords, minwords_len, signs))
+        return self.cleaned_data
+
+    def clean_sentence(self,sentence, lowercase = True, stopwords = False, minwords_len = False, signs = False):
+        sentence = sentence.split(' ')
+        if lowercase:
+            sentence = [word.lower() for word in sentence]
+        if signs:
+            sentence = [word if not any(caracter in signs for caracter in word) else self.remove_signs(word, signs) for word in sentence]
+        if stopwords:
+            sentence = [word for word in sentence if word not in stopwords and word.isalpha()]
+        if minwords_len:
+            sentence = [word for word in sentence if len(word) > minwords_len]
+        return sentence
+
+    @staticmethod
+    def remove_signs(wrd,signs):
+        wrd = list(wrd)
+        wrd = [word for word in wrd if not any(caracter in signs for caracter in word)]
+        wrd = ''.join(wrd)
+        return wrd
 
 
 
