@@ -64,7 +64,7 @@ class TextPreprocessing():
                 lemmatization = lambda pair:wnl.lemmatize(pair[0], pos=self.tag_conversor[pair[1]]) if pair[1] in self.tag_conversor else pair[0]
                 self.lemmatized_data.append([lemmatization(pair) for pair in tagged_pairs])
             elif method == 'spacy':
-                doc = nlp(sentence)
+                doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
                 self.lemmatized_data.append(token.lemma_ for token in doc)
             elif method == 'textserver':
                 ts = TextServer('usuari', 'passwd', 'morpho')
