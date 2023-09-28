@@ -2,6 +2,7 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
 from typing import List, Dict, Tuple
+import string
 
 # Spacy imports 
 import spacy
@@ -12,6 +13,7 @@ from complementary_material.textserver import TextServer
 
 # NLTK imports
 import nltk
+nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
