@@ -28,6 +28,7 @@ class TextPreprocessing():
         self.data = data
         self.tokenized_data = []
         self.lemmatized_data = []
+        self.cleaned_data = []
         self.tag_conversor = {'NN': 'n', 'NNS': 'n', 'JJ': 'a', 'JJR': 'a', 'JJS': 'a', 
                               'VB': 'v', 'VBD': 'v', 'VBG': 'v', 'VBN': 'v', 'VBP': 'v', 
                               'VBZ': 'v', 'RB': 'r', 'RBR': 'r', 'RBS': 'r'}
@@ -78,10 +79,10 @@ class TextPreprocessing():
             stopwords=set(nltk.corpus.stopwords.words('english'))
             signs = string.punctuation
             minwords_len = 2
-            for element in c_data:
+            for element in t_data:
                 self.cleaned_data.append(self.clean_sentence(element, lowercase, stopwords, minwords_len, signs))
         else: 
-            for element in c_data:
+            for element in t_data:
                  self.cleaned_data.append(self.clean_sentence(element, lowercase, stopwords, minwords_len, signs))
         return self.cleaned_data
 
