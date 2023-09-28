@@ -14,6 +14,9 @@ from complementary_material.textserver import TextServer
 import nltk
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+wnl = nltk.stem.WordNetLemmatizer()
 
 class TextPreprocessing():
 
