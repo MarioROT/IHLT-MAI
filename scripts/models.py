@@ -22,10 +22,10 @@ class StatisticalModels():
         self.models = models if isinstance(models,dict) else {m:[] for m in models}
         self.times = {key:[] for key in self.models}
         self.total_results = {key:[] for key in self.models}
-        self.a_models = {'HMM':nltk.tag.hmm.HiddenMarkovModelTrainer.train,
-                         'TnT':nltk.tag.tnt.TnT,
-                         'PER':nltk.tag.perceptron.PerceptronTagger,
-                         'CRF':nltk.teg.CRFTagger}
+        self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer.train, {}],
+                         'TnT':[nltk.tag.tnt.TnT, {}],
+                         'PER':[nltk.tag.perceptron.PerceptronTagger, {'load':False}],
+                         'CRF':[nltk.teg.CRFTagger, {}]}
         self.train_params = {'HMM':[], 'TnT':[], 'Per':[], 'CRF':['crf_tagger_model']}
         
     def do(self):
@@ -37,7 +37,7 @@ class StatisticalModels():
 
             for model in self.models:
                 time_before = time.time()
-                mod = self.a_models[model[0]](*[1:])
+                mod = self.a_models[model[0]](**self.a_models[model[1:]])
                 if model[0] != 'HMM':
                     mod.train(train_data, *self.train_params[model[0]])
                 else:
