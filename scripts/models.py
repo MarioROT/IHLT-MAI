@@ -36,15 +36,15 @@ class StatisticalModels():
         for i in tqdm(self.amount_data):
             train_data = self.data[:i]
 
-            for model in self.models:
+            for model in self.models.keys():
                 time_before = time.time()
-                mod = self.a_models[model[0]](**self.a_models[model[1:]])
-                if model[0] != 'HMM':
-                    mod.train(train_data, *self.train_params[model[0]])
+                mod = self.a_models[model(**self.a_models[model[1:]])
+                if model != 'HMM':
+                    mod.train(train_data, *self.train_params[model])
                 else:
-                    mod.train_supervised(train_data, *self.train_params[model[0]])
-                self.total_results[model[0]].append(round(mod.accuracy(test_data), 3))
-                self.times[model[0]].append(time.time() - time_before)
+                    mod.train_supervised(train_data, *self.train_params[model])
+                self.total_results[model].append(round(mod.accuracy(test_data), 3))
+                self.times[model].append(time.time() - time_before)
 
             print(i)
 
