@@ -23,11 +23,10 @@ class StatisticalModels():
         self.models = models if isinstance(models,dict) else {m:[] for m in models}
         self.times = {key:[] for key in self.models}
         self.total_results = {key:[] for key in self.models}
-        self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer.train, {}],
-                         'TnT':[nltk.tag.tnt.TnT, {}],
-                         'PER':[nltk.tag.perceptron.PerceptronTagger, {'load':False}],
-                         'CRF':[nltk.tag.CRFTagger, {}]}
-        self.train_params = {'HMM':[], 'TnT':[], 'Per':[], 'CRF':['crf_tagger_model']}
+        self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer, {},[]],
+                         'TnT':[nltk.tag.tnt.TnT, {},[]],
+                         'PER':[nltk.tag.perceptron.PerceptronTagger, {'load':False},[]],
+                         'CRF':[nltk.tag.CRFTagger, {}, ['crf_tagger_model']]}
         
     def do(self):
         pbar = tqdm(total=100)
@@ -38,11 +37,11 @@ class StatisticalModels():
 
             for model in self.models.keys():
                 time_before = time.time()
-                mod = self.a_models[model](**self.a_models[model[1:]])
+                mod = self.a_models[model][0](**self.a_models[model][1])
                 if model != 'HMM':
-                    mod.train(train_data, *self.train_params[model])
+                    mod.train(train_data, *self.a_models[model][2])
                 else:
-                    mod.train_supervised(train_data, *self.train_params[model])
+                    mod = mod.train_supervised(train_data, *self.a_models[model][2])
                 self.total_results[model].append(round(mod.accuracy(test_data), 3))
                 self.times[model].append(time.time() - time_before)
 
@@ -62,3 +61,4 @@ class StatisticalModels():
         df_times = pd.DataFrame.from_dict(self.times).round(3)
         df_times['Sentences'] = self.amount_data
         print(df_times)
+      print(df_times)
