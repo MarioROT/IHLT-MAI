@@ -61,4 +61,3 @@ class StatisticalModels():
         df_times = pd.DataFrame.from_dict(self.times).round(3)
         df_times['Sentences'] = self.amount_data
         print(df_times)
-      print(df_times)
