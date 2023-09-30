@@ -38,7 +38,7 @@ class StatisticalModels():
 
             for model in self.models.keys():
                 time_before = time.time()
-                mod = self.a_models[model(**self.a_models[model[1:]])
+                mod = self.a_models[model](**self.a_models[model[1:]])
                 if model != 'HMM':
                     mod.train(train_data, *self.train_params[model])
                 else:
