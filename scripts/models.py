@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 from nltk.lm import models
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
@@ -25,7 +26,7 @@ class StatisticalModels():
         self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer.train, {}],
                          'TnT':[nltk.tag.tnt.TnT, {}],
                          'PER':[nltk.tag.perceptron.PerceptronTagger, {'load':False}],
-                         'CRF':[nltk.teg.CRFTagger, {}]}
+                         'CRF':[nltk.tag.CRFTagger, {}]}
         self.train_params = {'HMM':[], 'TnT':[], 'Per':[], 'CRF':['crf_tagger_model']}
         
     def do(self):
