@@ -50,7 +50,7 @@ class StatisticalModels():
                 if model != 'HMM':
                     mod.train(train_data, **self.a_models[model][2])
                 else:
-                    mod = mod.train_supervised(train_data, *self.a_models[model][2])
+                    mod = mod.train_supervised(train_data, **self.a_models[model][2])
                 self.times_train[model].append(time.time() - time_before_train)
 
                 time_before_test=time.time()
