@@ -28,12 +28,12 @@ class StatisticalModels():
         self.times_test = {key:[] for key in self.models}
         self.times_total = {key:[] for key in self.models}
         self.total_results = {key:[] for key in self.models}
-        self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer, {},{'estimator':LID}],
+        self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer, {},{'estimator':self.LID}],
                          'TnT':[nltk.tag.tnt.TnT, {},{}],
                          'PER':[nltk.tag.perceptron.PerceptronTagger, {'load':False},{}],
                          'CRF':[nltk.tag.CRFTagger, {}, {'model_file':'crf_tagger_model'}]}
        
-    def LID(fd, bins):
+    def LID(self,fd, bins):
       return nltk.probability.LidstoneProbDist(fd, 0.1, bins)
         
     def do(self):
