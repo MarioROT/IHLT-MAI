@@ -28,10 +28,13 @@ class StatisticalModels():
         self.times_test = {key:[] for key in self.models}
         self.times_total = {key:[] for key in self.models}
         self.total_results = {key:[] for key in self.models}
-        self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer, {},[]],
-                         'TnT':[nltk.tag.tnt.TnT, {},[]],
-                         'PER':[nltk.tag.perceptron.PerceptronTagger, {'load':False},[]],
-                         'CRF':[nltk.tag.CRFTagger, {}, ['crf_tagger_model']]}
+        self.a_models = {'HMM':[nltk.tag.hmm.HiddenMarkovModelTrainer, {},{'estimator':LID}],
+                         'TnT':[nltk.tag.tnt.TnT, {},{}],
+                         'PER':[nltk.tag.perceptron.PerceptronTagger, {'load':False},{}],
+                         'CRF':[nltk.tag.CRFTagger, {}, {'model_file''crf_tagger_model'}}
+       
+    def LID(fd, bins):
+      return nltk.probability.LidstoneProbDist(fd, 0.1, bins)
         
     def do(self):
         pbar = tqdm(total=100)
@@ -45,7 +48,7 @@ class StatisticalModels():
                 time_before_train = time.time()
                 mod = self.a_models[model][0](**self.a_models[model][1])
                 if model != 'HMM':
-                    mod.train(train_data, *self.a_models[model][2])
+                    mod.train(train_data, **self.a_models[model][2])
                 else:
                     mod = mod.train_supervised(train_data, *self.a_models[model][2])
                 self.times_train[model].append(time.time() - time_before_train)
