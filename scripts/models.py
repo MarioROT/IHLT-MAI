@@ -73,6 +73,10 @@ class StatisticalModels():
         plt.legend()
         plt.show()
 
-        df_times = pd.DataFrame.from_dict(self.times).round(3)
-        df_times['Sentences'] = self.amount_data
-        print(df_times)
+        df_times_train = pd.DataFrame.from_dict(self.times_train).round(3)
+        df_times_test = pd.DataFrame.from_dict(self.times_test).round(3)
+        df_times_total = pd.DataFrame.from_dict(self.times_total).round(3)
+        df_times_train['Sentences'] = self.amount_data
+        df_times_test['Sentences'] = self.amount_data
+        df_times_total['Sentences'] = self.amount_data
+        print(df_times_train, df_times_test,df_times_total)
