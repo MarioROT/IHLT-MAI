@@ -79,4 +79,4 @@ class StatisticalModels():
         df_times_train['Sentences'] = self.amount_data
         df_times_test['Sentences'] = self.amount_data
         df_times_total['Sentences'] = self.amount_data
-        print(df_times_train, df_times_test,df_times_total)
+        print(df_times_train,"\n" ,df_times_test, "\n", df_times_total )
