@@ -28,10 +28,12 @@ class TextPreprocessing():
         self.data = data
         self.tokenized_data = []
         self.lemmatized_data = []
+        self.lesk_lemmatized_data = []
         self.cleaned_data = []
-        self.tag_conversor = {'NN': 'n', 'NNS': 'n', 'JJ': 'a', 'JJR': 'a', 'JJS': 'a', 
-                              'VB': 'v', 'VBD': 'v', 'VBG': 'v', 'VBN': 'v', 'VBP': 'v', 
-                              'VBZ': 'v', 'RB': 'r', 'RBR': 'r', 'RBS': 'r'}
+        self.tag_conversor = {'NN': 'n', 'NNS': 'n', 'NNP':'n', 'NNPS':'n', 
+                              'JJ': 'a', 'JJR': 'a', 'JJS': 'a', 
+                              'VB': 'v', 'VBD': 'v', 'VBG': 'v', 'VBN': 'v', 'VBP': 'v', 'VBZ':'v',
+                              'RB': 'r', 'RBR': 'r', 'RBS': 'r'}
 
     def __len__(self):
         return len(self.data)
@@ -61,7 +63,7 @@ class TextPreprocessing():
                         print('Applying NLTK tokenization to the sentence')
                     sentence = nltk.word_tokenize(sentence)
                 tagged_pairs = nltk.pos_tag(sentence)
-                lemmatization = lambda pair:wnl.lemmatize(pair[0], pos=self.tag_conversor[pair[1]]) if pair[1] in self.tag_conversor else pair[0]
+                lemmatization = lambda pair:wnl.lemmatize(pair[0], pos=self.tag_conversor[pair[1]]) if pair[1] in self.tag_conversor.keys() else pair[0]
                 self.lemmatized_data.append([lemmatization(pair) for pair in tagged_pairs])
             elif method == 'spacy':
                 doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
@@ -70,6 +72,26 @@ class TextPreprocessing():
                 ts = TextServer('usuari', 'passwd', 'morpho')
                 self.lemmatized_data([token[1] for token in ts.morpho(sentence)[0]])
         return self.lemmatized_data
+
+    def lesk_lemmatize_data(self, data=False, method='nltk', verbose = True):
+        wsd_sentences=[]
+        self.lemmatized_data = []
+        t_data = self.data if not data else data
+        for sentence in t_data:
+            if method == 'nltk':
+                if not isinstance(sentence, list):
+                    if verbose:
+                        print('Applying NLTK tokenization to the sentence')
+                    sentence = nltk.word_tokenize(sentence)
+                self.lesk_lemmatized_data.append(self.lesk_lemmatize_sentence(sentence))
+        return self.lesk_lemmatized_data
+
+    def lesk_lemmatize_sentence(self, sentence):
+        lemmatized_sentence =[]
+        for word in sentence:
+            word_pt = nltk.pos.tag(word)[1]
+            lemmatized_sentence.append(nltk.wsd.lesk(sentence, word, self.tag_conversor(word_pt) if word_pt in self.tag_conversor.keys() else None))
+        return lemmatized_sentence
 
     def clean_data(self, data = False, auto = True, lowercase = False, stopwords = False, minwords_len = False, signs = False):
         self.cleaned_data = []
@@ -104,6 +126,8 @@ class TextPreprocessing():
         wrd = [word for word in wrd if not any(caracter in signs for caracter in word)]
         wrd = ''.join(wrd)
         return wrd
+
+    
 
 
 
