@@ -88,9 +88,9 @@ class TextPreprocessing():
 
     def lesk_lemmatize_sentence(self, sentence):
         lemmatized_sentence =[]
-        sentence_tagged = nltk.pos_tag(word)
+        sentence_tagged = nltk.pos_tag(sentence)
         for (word,tag) in sentence_tagged:
-            lemmatized_sentence.append(nltk.wsd.lesk(sentence, word, self.tag_conversor(tag) if tag in self.tag_conversor.keys() else None))
+            lemmatized_sentence.append(nltk.wsd.lesk(sentence, word, self.tag_conversor[tag] if tag in self.tag_conversor.keys() else None))
         return lemmatized_sentence
 
     def clean_data(self, data = False, auto = True, lowercase = False, stopwords = False, minwords_len = False, signs = False):
@@ -126,9 +126,3 @@ class TextPreprocessing():
         wrd = [word for word in wrd if not any(caracter in signs for caracter in word)]
         wrd = ''.join(wrd)
         return wrd
-
-    
-
-
-
-
