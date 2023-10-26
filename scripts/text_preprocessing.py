@@ -67,7 +67,7 @@ class TextPreprocessing():
                 self.lemmatized_data.append([lemmatization(pair) for pair in tagged_pairs])
             elif method == 'spacy':
                 doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
-                self.lemmatized_data.append(token.lemma_ for token in doc)
+                self.lemmatized_data.append([token.lemma_ for token in doc])
             elif method == 'textserver':
                 ts = TextServer('usuari', 'passwd', 'morpho')
                 self.lemmatized_data([token[1] for token in ts.morpho(sentence)[0]])
