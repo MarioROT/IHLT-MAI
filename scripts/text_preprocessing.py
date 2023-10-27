@@ -73,7 +73,7 @@ class TextPreprocessing():
                 self.lemmatized_data([token[1] for token in ts.morpho(sentence)[0]])
         return self.lemmatized_data
 
-    def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False):
+    def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False, synset_word=False):
         self.wsd_lesk_applied_data = []
         t_data = self.data if not data else data
         for sentence in t_data:
@@ -82,14 +82,16 @@ class TextPreprocessing():
                     if verbose:
                         print('Applying NLTK tokenization to the sentence')
                     sentence = nltk.word_tokenize(sentence)
-                self.wsd_lesk_applied_data.append(self.wsd_lesk_sentence(sentence, keep_failures))
+                self.wsd_lesk_applied_data.append(self.wsd_lesk_sentence(sentence, keep_failures, synset_word))
         return self.wsd_lesk_applied_data
 
-    def wsd_lesk_sentence(self, sentence, keep_failures = False):
+    def wsd_lesk_sentence(self, sentence, keep_failures = False, synset_word = False):
         disambiguated_sentence =[]
         sentence_tagged = nltk.pos_tag(sentence)
         for (word,tag) in sentence_tagged:
             disambiguated_sentence.append([word, nltk.wsd.lesk(sentence, word, self.tag_conversor[tag] if tag in self.tag_conversor.keys() else None)])
+        if synset_word:
+            disambiguated_sentence = [[syns[0], syns[1].name().split('.')[0]] for syns in disambiguated_sentence]
         if keep_failures: 
             return [syns[1] if syns[1] else syns[0] for syns in disambiguated_sentence] 
         return [syns[1] for syns in disambiguated_sentence if syns[1]]
