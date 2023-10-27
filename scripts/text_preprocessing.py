@@ -91,7 +91,7 @@ class TextPreprocessing():
         for (word,tag) in sentence_tagged:
             disambiguated_sentence.append([word, nltk.wsd.lesk(sentence, word, self.tag_conversor[tag] if tag in self.tag_conversor.keys() else None)])
         if synset_word:
-            disambiguated_sentence = [[syns[0], syns[1].name().split('.')[0]] for syns in disambiguated_sentence]
+            disambiguated_sentence = [[syns[0], syns[1].name().split('.')[0] if syns[1] else syns[1]] for syns in disambiguated_sentence]
         if keep_failures: 
             return [syns[1] if syns[1] else syns[0] for syns in disambiguated_sentence] 
         return [syns[1] for syns in disambiguated_sentence if syns[1]]
