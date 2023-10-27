@@ -74,7 +74,6 @@ class TextPreprocessing():
         return self.lemmatized_data
 
     def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False):
-        wsd_sentences=[]
         self.wsd_lesk_applied_data = []
         t_data = self.data if not data else data
         for sentence in t_data:
@@ -83,7 +82,7 @@ class TextPreprocessing():
                     if verbose:
                         print('Applying NLTK tokenization to the sentence')
                     sentence = nltk.word_tokenize(sentence)
-                self.wsd_lesk_applied_data.append(self.wsd_lesk_sentence(sentence), keep_failures)
+                self.wsd_lesk_applied_data.append(self.wsd_lesk_sentence(sentence, keep_failures))
         return self.wsd_lesk_applied_data
 
     def wsd_lesk_sentence(self, sentence, keep_failures = False):
