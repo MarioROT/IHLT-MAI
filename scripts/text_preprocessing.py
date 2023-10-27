@@ -28,7 +28,7 @@ class TextPreprocessing():
         self.data = data
         self.tokenized_data = []
         self.lemmatized_data = []
-        self.lesk_lemmatized_data = []
+        self.wsd_lesk_applied_data = []
         self.cleaned_data = []
         self.tag_conversor = {'NN': 'n', 'NNS': 'n', 'NNP':'n', 'NNPS':'n', 
                               'JJ': 'a', 'JJR': 'a', 'JJS': 'a', 
@@ -73,9 +73,9 @@ class TextPreprocessing():
                 self.lemmatized_data([token[1] for token in ts.morpho(sentence)[0]])
         return self.lemmatized_data
 
-    def lesk_lemmatize_data(self, data=False, method='nltk', verbose = True):
+    def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False):
         wsd_sentences=[]
-        self.lesk_lemmatized_data = []
+        self.wsd_lesk_applied_data = []
         t_data = self.data if not data else data
         for sentence in t_data:
             if method == 'nltk':
@@ -83,15 +83,17 @@ class TextPreprocessing():
                     if verbose:
                         print('Applying NLTK tokenization to the sentence')
                     sentence = nltk.word_tokenize(sentence)
-                self.lesk_lemmatized_data.append(self.lesk_lemmatize_sentence(sentence))
-        return self.lesk_lemmatized_data
+                self.wsd_lesk_applied_data.append(self.wsd_lesk_sentence(sentence), keep_failures)
+        return self.wsd_lesk_applied_data
 
-    def lesk_lemmatize_sentence(self, sentence):
-        lemmatized_sentence =[]
+    def wsd_lesk_sentence(self, sentence, keep_failures = False):
+        disambiguated_sentence =[]
         sentence_tagged = nltk.pos_tag(sentence)
         for (word,tag) in sentence_tagged:
-            lemmatized_sentence.append(nltk.wsd.lesk(sentence, word, self.tag_conversor[tag] if tag in self.tag_conversor.keys() else None))
-        return [syns for syns in lemmatized_sentence if syns]
+            disambiguated_sentence.append([word, nltk.wsd.lesk(sentence, word, self.tag_conversor[tag] if tag in self.tag_conversor.keys() else None)])
+        if keep_failures: 
+            return [syns[1] if syns[1] else syns[0] for syns in disambiguated_sentence] 
+        return [syns[1] for syns in disambiguated_sentence if syns[1]]
 
     def clean_data(self, data = False, auto = True, lowercase = False, stopwords = False, minwords_len = False, signs = False):
         self.cleaned_data = []
