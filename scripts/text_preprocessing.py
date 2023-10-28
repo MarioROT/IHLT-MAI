@@ -114,7 +114,7 @@ class TextPreprocessing():
                 if verbose:
                     print('Applying NLTK tokenization to the sentence')
                 sentence = nltk.word_tokenize(sentence)
-            self.mfs_data.append(self.most_frequent_synset_sentence(sentence count_most_common))
+            self.mfs_data.append(self.most_frequent_synset_sentence(sentence, count_most_common))
         return self.mfs_data
 
     def most_frequent_synset_sentence(self, sentence, include_no_pos=False, include_no_cat_synsets=False, count_most_common = False):
