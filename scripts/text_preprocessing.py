@@ -106,7 +106,7 @@ class TextPreprocessing():
                 self.lemmatized_data([token[1] for token in ts.morpho(sentence)[0]])
         return self.lemmatized_data
 
-    def most_frequent_synset_data(self, data=False, verbose=True):
+    def most_frequent_synset_data(self, data=False, verbose=True, count_most_common = False):
         self.mfs_data = []
         t_data = self.data if not data else data
         for sentence in t_data:
@@ -114,20 +114,21 @@ class TextPreprocessing():
                 if verbose:
                     print('Applying NLTK tokenization to the sentence')
                 sentence = nltk.word_tokenize(sentence)
-            self.mfs_data.append(self.most_frequent_synset_sentence(sentence))
+            self.mfs_data.append(self.most_frequent_synset_sentence(sentence count_most_common))
         return self.mfs_data
 
-    def most_frequent_synset_sentence(self, sentence, include_no_pos=False, include_no_cat_synsets=False):
+    def most_frequent_synset_sentence(self, sentence, include_no_pos=False, include_no_cat_synsets=False, count_most_common = False):
         sentence = nltk.pos_tag(sentence)
         result_sentence = []
         for (word, tag) in sentence:
             if tag in self.tag_conversor.keys():
                 if len(wn.synsets(word, self.tag_conversor[tag])) > 0:
-                    result_sentence.append(self.most_frequent_synset(word,sel.tag_conversor[tag]))
+                    syns = self.most_frequent_synset(word,self.tag_conversor[tag]) if count_most_common else wn.synsets(word, self.tag_conversor[tag])[0]
                 elif include_no_cat_synsets and len(wn.synsets(word)) > 0:
-                    result_sentence.append(self.most_frequent_synset(word))
+                    syns = self.most_frequent_synset(word) if count_most_common else wn.synsets(word)[0]
             elif include_no_pos and len(wn.synsets(word)) > 0:
-                result_sentence.append(self.most_frequent_synset(word))
+                syns = self.most_frequent_synset(word) if count_most_common else wn.synsets(word)[0]
+            result_sentence.append(syns)
         return result_sentence
 
     def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False, synset_word=False):
