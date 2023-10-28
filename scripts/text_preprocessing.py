@@ -130,12 +130,6 @@ class TextPreprocessing():
                 result_sentence.append(most_frequent_synset(word))
         return result_sentence
 
-            if len(wn.synsets(word))>0:
-                    common= 
-                    tupple=(Lemmas[pair][0],common)
-                    results['accepted'].append(tupple)
-        return result_sentence
-
     def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False, synset_word=False):
         self.wsd_lesk_applied_data = []
         t_data = self.data if not data else data
