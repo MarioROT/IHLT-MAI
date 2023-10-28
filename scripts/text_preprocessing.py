@@ -121,14 +121,14 @@ class TextPreprocessing():
         sentence = nltk.pos_tag(sentence)
         result_sentence = []
         for (word, tag) in sentence:
+        
             if tag in self.tag_conversor.keys():
                 if len(wn.synsets(word, self.tag_conversor[tag])) > 0:
-                    syns = self.most_frequent_synset(word,self.tag_conversor[tag]) if count_most_common else wn.synsets(word, self.tag_conversor[tag])[0]
+                    result_sentence.append(self.most_frequent_synset(word,self.tag_conversor[tag]) if count_most_common else wn.synsets(word, self.tag_conversor[tag])[0])
                 elif include_no_cat_synsets and len(wn.synsets(word)) > 0:
-                    syns = self.most_frequent_synset(word) if count_most_common else wn.synsets(word)[0]
+                    result_sentence.append(self.most_frequent_synset(word) if count_most_common else wn.synsets(word)[0])
             elif include_no_pos and len(wn.synsets(word)) > 0:
-                syns = self.most_frequent_synset(word) if count_most_common else wn.synsets(word)[0]
-            result_sentence.append(syns)
+                result_sentence.append(self.most_frequent_synset(word) if count_most_common else wn.synsets(word)[0])
         return result_sentence
 
     def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False, synset_word=False):
