@@ -117,17 +117,17 @@ class TextPreprocessing():
             self.mfs_data.append(self.most_frequent_synset_sentence(sentence))
         return self.mfs_data
 
-    def most_frequent_synset_sentence(self, sentence, include_no_pos=False, false=False):
+    def most_frequent_synset_sentence(self, sentence, include_no_pos=False, include_no_cat_synsets=False):
         sentence = nltk.pos_tag(sentence)
         result_sentence = []
-        for (word, tag) in range(sentence):
+        for (word, tag) in sentence:
             if tag in self.tag_conversor.keys():
                 if len(wn.synsets(word, self.tag_conversor[tag])) > 0:
-                    result_sentence.append(most_frequent_synset(word,sel.tag_conversor[tag]))
+                    result_sentence.append(self.most_frequent_synset(word,sel.tag_conversor[tag]))
                 elif include_no_cat_synsets and len(wn.synsets(word)) > 0:
-                    result_sentence.append(most_frequent_synset(word))
+                    result_sentence.append(self.most_frequent_synset(word))
             elif include_no_pos and len(wn.synsets(word)) > 0:
-                result_sentence.append(most_frequent_synset(word))
+                result_sentence.append(self.most_frequent_synset(word))
         return result_sentence
 
     def wsd_lesk_data(self, data=False, method='nltk', verbose = True, keep_failures = False, synset_word=False):
