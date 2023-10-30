@@ -121,7 +121,6 @@ class TextPreprocessing():
         sentence = nltk.pos_tag(sentence)
         result_sentence = []
         for (word, tag) in sentence:
-        
             if tag in self.tag_conversor.keys():
                 if len(wn.synsets(word, self.tag_conversor[tag])) > 0:
                     result_sentence.append(self.most_frequent_synset(word,self.tag_conversor[tag]) if count_most_common else wn.synsets(word, self.tag_conversor[tag])[0])
