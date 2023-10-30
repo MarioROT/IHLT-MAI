@@ -2,6 +2,11 @@ import math
 import os
 import numpy as np
 from typing import List, Dict, Tuple
+from nltk.corpus.reader.wordnet import Synset
+from nltk.corpus import wordnet as wn
+nltk.download('wordnet_ic')
+from nltk.corpus import wordnet_ic
+brown_ic = wordnet_ic.ic('ic-brown.dat')
 
 class ComputeMetrics():
     def __init__(self,
@@ -15,12 +20,18 @@ class ComputeMetrics():
         self.methods = {'jaccard': self.jaccard_distance,
                         'cosine': self.cosine_distance, 
                         'overlap': self.overlap_distance,
-                        'dice': self.dice_distance}
+                        'dice': self.dice_distance,
+                        'lcs': self.lowest_common_hypernyms_distance,
+                        'path': self.path_distance,
+                        'wup': self.wup_distance,
+                        'lin': self.lin_distance}
+        self.synsets_mets = ['lcs', 'path', 'wup', 'lin']
                 
     def do(self, save = False):
         results = {}
         metsNames = self.metrics if isinstance(self.metrics, list) else self.metrics.keys()
         for met in metsNames:
+            if met in self.synsets_mets and not isinstance(self.data[0][0][0], Synset)
             if self.verbose and self.verbose > 0: print(f'Computing {met}...')
             results[met] = []
             for row in self.data:
@@ -59,7 +70,7 @@ class ComputeMetrics():
         return 1 - (sum([self.catch(syns1.wup_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
 
    def lin_distance(self, sentence1, sentence2):
-        return 1 - (sum([self.catch(syns1.lin_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
+        return 1 - (sum([self.catch(syns1.lin_similarity, syns2, brown_ic, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
 
     @staticmethod
     def catch(func, *args, handle=lambda e : e, **kwargs):
