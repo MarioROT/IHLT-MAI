@@ -182,7 +182,7 @@ class TextPreprocessing():
                 else:
                     words.append(ent[0])
                     last_entity = ''
-        if method == 'spacy'
+        if method == 'spacy':
             doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
             entities=[entity.text for entity in doc.ents]
             not_entities=[word.text for word in doc if not any([ word.text in  entity.text for entity in doc.ents])] 
