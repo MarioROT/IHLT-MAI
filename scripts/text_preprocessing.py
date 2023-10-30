@@ -158,13 +158,33 @@ class TextPreprocessing():
         self.named_entities_data_l = []
         t_data = self.data if not data else data
         for sentence in t_data: 
-            self.named_entities_data_l.append(self.named_entities_sentence(sentence))
+            self.named_entities_data_l.append(self.named_entities_sentence(sentence, method, verbose))
         return self.named_entities_data_l
 
-    def named_entities_sentence (self, sentence):
-        doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
-        entities=[entity.text for entity in doc.ents]
-        not_entities=[word.text for word in doc if not any([ word.text in  entity.text for entity in doc.ents])] 
+    def named_entities_sentence (self, sentence, method = 'nltk', verbose = True):
+        if method == 'nltk':
+            if not isinstance(sentence, list):
+                if verbose:
+                    print('Applying NLTK tokenization to the sentence')
+                sentence = nltk.word_tokenize(sentence)
+            named_entities =  nltk.ne_chunk(nltk.pos_tag(sentence))
+            words = []
+            last_entity = ''
+            entities = []
+            for ent in named_entities:
+            if isinstance(ent, Tree):
+                if ent.label() == last_entity:
+                    entities.append(entities.pop(-1) + ' '+ ' '.join([element[0] for element in ent]))
+                else:
+                    entities.append(' '.join([element[0] for element in ent]))
+                last_entity = ent.label()
+            else:
+                words.append(ent[0])
+                last_entity = ''
+        if method == 'spacy'
+            doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
+            entities=[entity.text for entity in doc.ents]
+            not_entities=[word.text for word in doc if not any([ word.text in  entity.text for entity in doc.ents])] 
         return entities+not_entities
 
     @staticmethod
