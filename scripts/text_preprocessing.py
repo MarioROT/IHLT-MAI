@@ -155,7 +155,7 @@ class TextPreprocessing():
             return [syns[1] if syns[1] else syns[0] for syns in disambiguated_sentence] 
         return [syns[1] for syns in disambiguated_sentence if syns[1]]
 
-    def named_entities_data (self, data=False, method='spacy', verbose = True):
+    def named_entities_data (self, data=False, method='nltk', verbose = True):
         self.named_entities_data_l = []
         t_data = self.data if not data else data
         for sentence in t_data: 
