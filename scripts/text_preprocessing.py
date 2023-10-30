@@ -106,7 +106,7 @@ class TextPreprocessing():
                 self.lemmatized_data([token[1] for token in ts.morpho(sentence)[0]])
         return self.lemmatized_data
 
-    def most_frequent_synset_data(self, data=False, verbose=True, count_most_common = False):
+    def most_frequent_synset_data(self, data=False, verbose=True, include_no_pos=False, include_no_cat_synsets=False, count_most_common = False):
         self.mfs_data = []
         t_data = self.data if not data else data
         for sentence in t_data:
@@ -114,7 +114,7 @@ class TextPreprocessing():
                 if verbose:
                     print('Applying NLTK tokenization to the sentence')
                 sentence = nltk.word_tokenize(sentence)
-            self.mfs_data.append(self.most_frequent_synset_sentence(sentence, count_most_common))
+            self.mfs_data.append(self.most_frequent_synset_sentence(sentence, include_no_pos, include_no_cat_synsets, count_most_common))
         return self.mfs_data
 
     def most_frequent_synset_sentence(self, sentence, include_no_pos=False, include_no_cat_synsets=False, count_most_common = False):

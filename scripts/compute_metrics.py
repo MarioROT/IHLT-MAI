@@ -2,6 +2,7 @@ import math
 import os
 import numpy as np
 from typing import List, Dict, Tuple
+import nltk
 from nltk.corpus.reader.wordnet import Synset
 from nltk.corpus import wordnet as wn
 nltk.download('wordnet_ic')
@@ -26,6 +27,7 @@ class ComputeMetrics():
                         'wup': self.wup_distance,
                         'lin': self.lin_distance}
         self.synsets_mets = ['lcs', 'path', 'wup', 'lin']
+        self.eps = 0.0001
                 
     def do(self, save = False):
         results = {}
@@ -63,16 +65,16 @@ class ComputeMetrics():
         return 1 - (len(sentence1.intersection(sentence2))/math.sqrt(len(sentence1)*len(sentence2)))
     
     def lowest_common_hypernyms_distance(self, sentence1, sentence2):
-        return 1 - (sum([1 if self.catch(syns1.lowest_common_hypernyms, syns2, handle=lambda e: False) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2)))
+        return 1 - (sum([1 for syns1 in sentence1 for syns2 in sentence2 if self.catch(syns1.lowest_common_hypernyms, syns2, handle=lambda e: False)]) / (len(sentence1)*len(sentence2) + self.eps))
 
     def path_distance(self, sentence1, sentence2):
-        return 1 - (sum([self.catch(syns1.path_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
+        return 1 - (sum([self.catch(syns1.path_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2)+ self.eps))
 
     def wup_distance(self, sentence1, sentence2):
-        return 1 - (sum([self.catch(syns1.wup_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
+        return 1 - (sum([self.catch(syns1.wup_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2)+ self.eps))
 
-   def lin_distance(self, sentence1, sentence2):
-        return 1 - (sum([self.catch(syns1.lin_similarity, syns2, brown_ic, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
+    def lin_distance(self, sentence1, sentence2):
+        return 1 - (sum([self.catch(syns1.lin_similarity, syns2, brown_ic, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2)+ self.eps))
 
     @staticmethod
     def catch(func, *args, handle=lambda e : e, **kwargs):
