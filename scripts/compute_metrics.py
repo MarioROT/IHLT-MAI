@@ -48,22 +48,3 @@ class ComputeMetrics():
 
     def cosine_distance(self, sentence1, sentence2):
         return 1 - (len(sentence1.intersection(sentence2))/math.sqrt(len(sentence1)*len(sentence2)))
-    
-    def lowest_common_hypernyms_distance(self, sentence1, sentence2):
-        return 1 - (sum([1 if self.catch(syns1.lowest_common_hypernyms, syns2, handle=lambda e: False) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2)))
-
-    def path_distance(self, sentence1, sentence2):
-        return 1 - (sum([self.catch(syns1.path_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
-
-    def wup_distance(self, sentence1, sentence2):
-        return 1 - (sum([self.catch(syns1.wup_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
-
-   def lin_distance(self, sentence1, sentence2):
-        return 1 - (sum([self.catch(syns1.lin_similarity, syns2, handle=lambda e: 0) for syns1 in sentence1 for syns2 in sentence2]) / (len(sentence1)*len(sentence2))
-
-    @staticmethod
-    def catch(func, *args, handle=lambda e : e, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except Exception as e:
-            return handle(e)
