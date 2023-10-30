@@ -31,7 +31,9 @@ class ComputeMetrics():
         results = {}
         metsNames = self.metrics if isinstance(self.metrics, list) else self.metrics.keys()
         for met in metsNames:
-            if met in self.synsets_mets and not isinstance(self.data[0][0][0], Synset)
+            if met in self.synsets_mets and not isinstance(self.data[0][0][0], Synset):
+                print(f"{met} cannot be computed because the required data data type is 'Synset'")
+                continue
             if self.verbose and self.verbose > 0: print(f'Computing {met}...')
             results[met] = []
             for row in self.data:
