@@ -185,8 +185,8 @@ class TextPreprocessing():
         if method == 'spacy':
             doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
             entities=[entity.text for entity in doc.ents]
-            not_entities=[word.text for word in doc if not any([ word.text in  entity.text for entity in doc.ents])] 
-        return entities+not_entities
+            words=[word.text for word in doc if not any([ word.text in  entity.text for entity in doc.ents])] 
+        return entities+words
 
     @staticmethod
     def remove_signs(wrd,signs):
