@@ -36,6 +36,7 @@ class TextPreprocessing():
         self.mfs_data = []
         self.wsd_lesk_applied_data = []
         self.cleaned_data = []
+        self.named_entities_data_l = []
         self.tag_conversor = {'NN': 'n', 'NNS': 'n', 'NNP':'n', 'NNPS':'n', 
                               'JJ': 'a', 'JJR': 'a', 'JJS': 'a', 
                               'VB': 'v', 'VBD': 'v', 'VBG': 'v', 'VBN': 'v', 'VBP': 'v', 'VBZ':'v',
@@ -152,6 +153,19 @@ class TextPreprocessing():
         if keep_failures: 
             return [syns[1] if syns[1] else syns[0] for syns in disambiguated_sentence] 
         return [syns[1] for syns in disambiguated_sentence if syns[1]]
+
+    def named_entities_data (self, data=False, method='spacy', verbose = True):
+        self.named_entities_data_l = []
+        t_data = self.data if not data else data
+        for sentence in t_data: 
+            self.named_entities_data_l.append(self.named_entities_sentence(sentence))
+        return self.named_entities_data_l
+
+    def named_entities_sentence (self, sentence):
+        doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
+        entities=[entity.text for entity in doc.ents]
+        not_entities=[word.text for word in doc if not any([ word.text in  entity.text for entity in doc.ents])] 
+        return entities+not_entities
 
     @staticmethod
     def remove_signs(wrd,signs):
