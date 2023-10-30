@@ -24,6 +24,7 @@ from nltk.corpus import wordnet as wn
 from nltk.corpus import wordnet_ic
 brown_ic = wordnet_ic.ic('ic-brown.dat')
 wnl = nltk.stem.WordNetLemmatizer()
+from nltk.tree import Tree
 
 class TextPreprocessing():
 
@@ -172,15 +173,15 @@ class TextPreprocessing():
             last_entity = ''
             entities = []
             for ent in named_entities:
-            if isinstance(ent, Tree):
-                if ent.label() == last_entity:
-                    entities.append(entities.pop(-1) + ' '+ ' '.join([element[0] for element in ent]))
+                if isinstance(ent, Tree):
+                    if ent.label() == last_entity:
+                        entities.append(entities.pop(-1) + ' '+ ' '.join([element[0] for element in ent]))
+                    else:
+                        entities.append(' '.join([element[0] for element in ent]))
+                    last_entity = ent.label()
                 else:
-                    entities.append(' '.join([element[0] for element in ent]))
-                last_entity = ent.label()
-            else:
-                words.append(ent[0])
-                last_entity = ''
+                    words.append(ent[0])
+                    last_entity = ''
         if method == 'spacy'
             doc = nlp(sentence if not isinstance(sentence, list) else ' '.join(sentence))
             entities=[entity.text for entity in doc.ents]
