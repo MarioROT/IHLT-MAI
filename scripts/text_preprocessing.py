@@ -13,6 +13,12 @@ from complementary_material.textserver import TextServer
 
 # NLTK imports
 import nltk
+from nltk.corpus import wordnet as wn
+from nltk.corpus import wordnet_ic
+from nltk.tree import Tree
+brown_ic = wordnet_ic.ic('ic-brown.dat')
+wnl = nltk.stem.WordNetLemmatizer()
+
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
@@ -20,11 +26,8 @@ nltk.download('treebank')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 nltk.download('wordnet_ic')
-from nltk.corpus import wordnet as wn
-from nltk.corpus import wordnet_ic
-brown_ic = wordnet_ic.ic('ic-brown.dat')
-wnl = nltk.stem.WordNetLemmatizer()
-from nltk.tree import Tree
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
 
 class TextPreprocessing():
 

@@ -50,7 +50,7 @@ class ComputeMetrics():
             for metName in metsNames:
                 np.save(metName, results[metName])
 
-        return results
+        return {k:np.array(v) for k,v in results.items()}
 
     def jaccard_distance(self, sentence1, sentence2):
         return 1 - (len(sentence1.intersection(sentence2))/len(sentence1.union(sentence2)))
