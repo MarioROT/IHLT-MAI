@@ -86,7 +86,7 @@ class ShowResults():
         return self.dataframe
     
     def heatmap (self): 
-        sns.heatmap(self.dataframe.set_index('Category'), annot=True, linewidths=0.3,cmap='YlGnBu',yticklabels=True,fmt='.3f')
+        sns.heatmap(self.dataframe.set_index('Category'), annot=True, linewidths=0.3,cmap='YlGnBu',yticklabels=True,fmt='.3f', vmin=0, vmax=1)
         plt.gcf().set_size_inches(5,12)
         plt.show()
         
