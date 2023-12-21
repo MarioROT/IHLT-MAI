@@ -3,6 +3,8 @@ import io
 import pandas as pd
 from prettytable import PrettyTable
 from scipy.stats import pearsonr
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 class Dataset():
     def __init__(self, path):
@@ -82,3 +84,9 @@ class ShowResults():
         metrics = metrics if metrics else self.metrics
         self.dataframe = pd.concat([pd.DataFrame(self.dict_group(v,metrics)) for v  in self.groups])
         return self.dataframe
+    
+    def heatmap (self): 
+        sns.heatmap(self.dataframe.set_index('Category'), annot=True, linewidths=0.3,cmap='YlGnBu',yticklabels=True,fmt='.3f')
+        plt.gcf().set_size_inches(5,12)
+        plt.show()
+        
